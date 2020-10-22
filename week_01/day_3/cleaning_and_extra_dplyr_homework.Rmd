@@ -52,6 +52,24 @@ movies_selected %>%
 ```
 
 ```{r}
+movies_runtime <- movies_selected %>% 
+  mutate(runtime = na_if(runtime, 0))
+movies_runtime
+```
 
+```{r}
+movies_imputed <- 
+  movies_runtime %>%
+  mutate(runtime = coalesce(runtime, median(runtime, na.rm  = TRUE)))
+movies_imputed
+  
+```
+
+```{r}
+movies_imputed %>% 
+  slice_min(runtime, n = 10)
+
+movies_imputed %>% 
+  slice_max(runtime, n = 10)
 ```
 
