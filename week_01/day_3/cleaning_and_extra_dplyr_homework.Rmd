@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+movies <- read_csv("data/movies.csv")
+```
+
+```{r}
+view(movies)
+```
+
+```{r}
+head(movies)
+```
+
+```{r}
+nrow(movies)
+```
+
+```{r}
+ncol(movies)
+```
+
+```{r}
+dim(movies)
+```
+
+```{r}
+names(movies)
+```
+
+```{r}
+glimpse(movies)
+```
+
+```{r}
+movies_selected <- movies %>% 
+  select("title", "budget", "runtime")
+movies_selected
+```
+
+```{r}
+movies_selected %>% 
+  summarise_all(funs(sum(is.na(.))))
+  
+```
+
+```{r}
+
+```
+

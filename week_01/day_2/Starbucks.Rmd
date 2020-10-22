@@ -7,9 +7,14 @@ library(tidyverse)
 ```
 
 ```{r}
-
+coffees
 ```
-
+```{r}
+drink_calories
+```
+```{r}
+filter(drink_calories, Beverage_category, Beverage, Beverage_prep, Calories 
+```
 
 
 
