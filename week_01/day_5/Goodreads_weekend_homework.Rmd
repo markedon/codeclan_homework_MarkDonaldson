@@ -1,0 +1,41 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+good_reads <- read_csv("data/books.csv")
+```
+
+```{r}
+head(good_reads)
+```
+
+```{r}
+tail(good_reads)
+```
+
+```{r}
+dim(good_reads)
+```
+
+```{r}
+names(good_reads)
+```
+
+```{r}
+ratings <- good_reads %>%
+  select(title, authors, average_rating, ratings_count) %>%
+  mutate(is_empty = is.na(average_rating)) 
+
+ratings%>% filter(is_empty == TRUE)
+```
+
+```{r}
+
+```
+
