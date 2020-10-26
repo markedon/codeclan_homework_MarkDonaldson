@@ -1,0 +1,38 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+good_reads <- read_csv("data/books.csv")
+```
+
+```{r}
+sum(is.na(good_reads))
+```
+
+```{r}
+good_reads %>% 
+  summarise(across(.fns = ~ sum(is.na(.x))))
+```
+
+```{r}
+good_reads <- good_reads %>% 
+  janitor::clean_names() %>% 
+  drop_na()
+```
+
+```{r}
+good_reads
+```
+```{r}
+
+```
+
+
+
+
