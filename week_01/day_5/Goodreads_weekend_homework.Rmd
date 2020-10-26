@@ -32,7 +32,7 @@ ratings <- good_reads %>%
   select(title, authors, average_rating, ratings_count) %>%
   mutate(is_empty = is.na(average_rating)) 
 
-ratings%>% filter(is_empty == TRUE)
+ratings %>% filter(is_empty == TRUE)
 ```
 
 ```{r}
