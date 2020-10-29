@@ -1,0 +1,122 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Programming in R Homework
+1 MVP
+1.1
+1.1.1
+Find the weather forecast for the next three days Each list element should have the name of the day of the week. Inside each element should be another named list that tells you the temperature, chance of rain and wind speed.
+
+1.2
+Using the list you’ve just made find:
+
+The chance of rain tomorrow
+The wind speed on the day after tomorrow
+The temperature tomorrow.
+1.3
+1.3.1
+Find a 14 day forecast and create a matrix of the forecasts for temperature, where each week is one row.
+
+You will want to give a name to the matrix you create.
+
+1.3.2
+Now select:
+
+The third day of the second week
+The whole second week
+The first, third and fifth days in both weeks.
+1.4
+Write a function that pre-appends “The answer is:” to any character input, and either returns the number for numbers less than 10, or divides the number by 10 for numbers greater than 10. For anything else return “Invalid input”.
+
+1.5
+Write a function which checks if two vectors have the same elements.
+
+If they have the same elements in the same order, return “Exactly the same”
+
+If they have the same elements but in a different order, return “The same”
+
+If they don’t have the same elements, return “Different”.
+
+
+```{r}
+edinburgh_weather <- list(
+                "Thursday" = list(temperature = 13, chance_of_rain = 80, wind_speed = 18),
+                "Friday" = list(temperature = 13, chance_of_rain = 20, wind_speed = 13),
+                "Saturday" = list(temperature = 13, chance_of_rain = 70, wind_speed = 19)
+)
+
+edinburgh_weather
+```
+
+The chance of rain tomorrow
+```{r}
+edinburgh_weather$Thursday$chance_of_rain
+```
+
+The wind speed on the day after tomorrow
+```{r}
+edinburgh_weather$Friday$wind_speed
+```
+
+The temperature tomorrow
+```{r}
+edinburgh_weather$Thursday$temperature
+```
+
+```{r}
+temps <- c(10, 11, 9, 12, 8, 10, 11, 13, 9, 10, 8, 11, 13, 12)
+edin_weather_matrix <- matrix(temps, nrow = 2, ncol = 7)
+rownames(edin_weather_matrix) <- c("Week 1", "Week 2")
+colnames(edin_weather_matrix) <- c("Thurs", "Fri", "Sat", "Sun", "Mon", "Tues", "Wed")
+
+edin_weather_matrix
+```
+
+The third day of the second week
+```{r}
+edin_weather_matrix[2, 3]
+```
+
+The whole second week
+```{r}
+edin_weather_matrix[2, 1:7]
+```
+
+The first, third and fifth days in both weeks.
+```{r}
+edin_weather_matrix[, c(1, 3, 5)]
+
+```
+
+Write a function that pre-appends “The answer is:” to any character input, and either returns the number for numbers less than 10, or divides the number by 10 for numbers greater than 10. For anything else return “Invalid input”.
+
+```{r}
+pre_appends <- function(x) {
+  if (x < 10) {
+    result <- x
+  } else if (x > 10) {
+    result <- x / 10
+  } else {
+    result <- "Invalid input"
+  }
+  return(paste("The answer is:", result))
+}
+
+pre_appends(10)
+```
+
+1.5
+Write a function which checks if two vectors have the same elements.
+If they have the same elements in the same order, return “Exactly the same”
+If they have the same elements but in a different order, return “The same”
+If they don’t have the same elements, return “Different”.
+
+```{r}
+x <- c()
+vector_check <- function(x, y) {
+  if (x == y)
+}
+```
+
