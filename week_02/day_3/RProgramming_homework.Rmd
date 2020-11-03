@@ -114,9 +114,16 @@ If they have the same elements but in a different order, return “The same”
 If they don’t have the same elements, return “Different”.
 
 ```{r}
-x <- c()
-vector_check <- function(x, y) {
-  if (x == y)
+is_same_vector <- function(vector_1, vector_2) {
+  if (all(vector_1 == vector_2)) {
+    return("Exactly the same")
+  }
+
+  if (all(sort(vector_1) == sort(vector_2))) {
+    return("The same")
+  }
+
+  return("Different")
 }
 ```
 

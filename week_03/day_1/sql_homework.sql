@@ -94,4 +94,12 @@ SELECT
    ROUND(CAST((sum(CAST(grade = 1 AS INT)))AS REAL) / CAST((COUNT(id))AS REAL)*100) AS percentage_number_are_grade_1
 FROM employees
 GROUP BY department
-	
+
+------EXTENSIONS
+------Do a count by year of the start_date of all employees, ordered most recent year last.
+
+
+SELECT
+	start_date
+FROM employees 
+ORDER BY start_date ASC NULLS LAST ;
