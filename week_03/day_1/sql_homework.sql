@@ -75,7 +75,8 @@ SELECT
 	count(id) AS num_employees
 FROM employees 
 WHERE fte_hours BETWEEN 0 AND 1
-GROUP BY department, fte_hours ;
+GROUP BY department, fte_hours 
+ORDER BY department ASC NULLS LAST, fte_hours ASC NULLS LAST ;
 
 ------Obtain a table showing any departments in which there are two or more employees lacking a stored first name. 
 ------Order the table in descending order of the number of employees lacking a first name, and then in alphabetical order by department.
@@ -85,14 +86,16 @@ SELECT
 	count(id) AS num_employees_no_first_name
 FROM employees 
 WHERE first_name IS NULL 
-GROUP BY department ;
+GROUP BY department 
+HAVING count(id) >= 2
+ORDER BY count(id) DESC , department ASC NULLS LAST ;
 
 ------[Tough!] Find the proportion of employees in each department who are grade 1.
 
 SELECT 
-	department, 
-   ROUND(CAST((sum(CAST(grade = 1 AS INT)))AS REAL) / CAST((COUNT(id))AS REAL)*100) AS percentage_number_are_grade_1
-FROM employees
+  department, 
+  SUM(CAST(grade = '1' AS INT)) / CAST(COUNT(id) AS REAL) AS prop_grade_1 
+FROM employees 
 GROUP BY department
 
 ------EXTENSIONS
