@@ -104,11 +104,10 @@ WHERE local_tax_code IS NULL;
 ------where charge_cost depends upon the team to which the employee belongs. Get a table showing expected_profit for each employee.
 
 SELECT 
-  first_name, 
-  last_name
-FROM employees AS e INNER JOIN pay_details AS pd
-ON e.pay_detail_id = pd.id
-WHERE pd.local_tax_code IS NULL ;
+  *, 
+  (48 * 35 * CAST(t.charge_cost AS INT) - e.salary) *e.fte_hours AS expected_profit
+FROM employees AS e LEFT JOIN teams AS t
+ON t.id = e.team_id ;
 
 ------MVP
 ------Q12. Get a list of the id, first_name, last_name, salary and fte_hours of employees in the largest department. Add two extra columns 
