@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+```
+# Question 1.
+
+Load in the libraries you need, and look at the backpack data. Take note of variable names and dimensions.
+
+```{r}
+CodeClanData::backpack
+```
+
+```{r}
+head(backpack)
+dim(backpack)
+names(backpack)
+```
+
+# Question 2.
+
+What is the distribution of backpack weights that students are carrying? Choose an appropriate graph to show the distribution.
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight) +
+  geom_histogram(col = "white")
+```
+The distribution of the backpack weight is pretty much all in the 0 to 20 kgs with a couple of outliers.
+
+
+# Question 3.
+
+Are there differences in backpack weight between sex?
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight) +
+  geom_histogram(col = "white") +
+  facet_wrap(~ sex)
+```
+The weight of the male bags is slightly more spread out than the females.
+
+
+# Question 4.
+
+What is the relationship between body weight and backpack weight?
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight, y = body_weight) +
+  geom_point()
+```
+I dont see any real discernable pattern.
+
+
+# Question 5.
+
+Is this relationship different between men and women? Choose an appropriate plot and interpret your findings.
+
+```{r}
+ggplot(backpack) +
+  aes(x = backpack_weight, y = body_weight, colour = sex) +
+  geom_point() +
+  facet_wrap(~ sex) +
+  theme_classic()
+```
+Male bodyweights are on average heavier but backpack weights are braodly similar
+
+
+# Question 6.
+
+What proportion of students report back pain?
+
+```{r}
+back_pain <- backpack %>%
+  mutate(back_problems = recode(back_problems, 
+                       "0" = "No", 
+                       "1" = "Yes"))
+```
+```{r}
+ggplot(back_pain) + 
+  aes(x = back_problems, fill = back_problems) + 
+  geom_bar() +
+ylim(0,100) + 
+  labs(x = "backpain reported", y = "student count") +
+    scale_fill_manual(values=c("#993300", "#996600")) +
+theme(legend.position = "none")
+```
+
+# Question 7.
+
+Is this proportion different between men and women?
+
+```{r}
+ggplot(back_pain) + 
+  aes(x = back_problems, fill = back_problems) + 
+  geom_bar() +
+ylim(0,100) + 
+  labs(x = "backpain reported", y = "student count") +
+    scale_fill_manual(values=c("#993300", "#996600")) +
+  facet_wrap(~ sex) +
+theme(legend.position = "none")
+```
+
+
+
+
+
+
