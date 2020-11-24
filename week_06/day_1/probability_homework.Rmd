@@ -1,0 +1,117 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(gtools)
+library(tidyverse)
+
+titanic <- read.csv("data/titanic.csv")
+
+titanic %>% 
+  distinct(class)
+```
+```{r}
+
+
+  
+```
+
+
+
+
+
+# 2 MVP and Extension - Probability problems
+Today was pretty full-on! Here are some problems to help you consolidate what you learned. Feel free to work on paper or in R, whichever you are most comfortable with:
+
+MVP - try four of the problems
+Extension - try more than four!
+
+1. If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+
+```{r}
+roll_die_once <- rolldie(1) 
+
+roll_die_once %>% 
+  filter(roll_die_once < 5)
+
+
+```
+
+```{r}
+q1 %>%
+  filter(X1 < 5)
+```
+
+
+2. How many outcomes are there in the sample space of an experiment in which we toss three dice?
+
+```{r}
+three_dice_sample<- rolldie(3) %>% 
+  summarise(sample = nrow(rolldie(3)))
+three_dice_sample
+```
+
+
+3.  In an experiment where we roll four dice:
+
+
+```{r}
+s_4_dice <- rolldie(4) 
+s_4_dice
+  
+```
+
+i - How many outcomes are in the event total_equals_5_6_7 (i.e. the total of the four dice equals 5, 6 or 7)?
+```{r}
+total_equals_5_6_7 <- s_4_dice %>%
+  summarise(num_outcomes = rowSums(. == 5|6|7)) %>% 
+  head(1)
+total_equals_5_6_7
+```
+
+ii - What is the probability of this event?
+
+prob(event) = num(event outcomes) / num (all outcomes)
+
+```{r}
+s_4_dice_total_outcomes <-  nrow(rolldie(4))
+s_4_dice_total_outcomes
+prob_total_equals_5_6_7 <- 4 / 1296
+prob_total_equals_5_6_7 
+```
+
+iii - What assumptions do we apply in answering part ii?
+
+The assumption is that all outcomes are equally likely 
+
+4. Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+
+```{r}
+group_heights <- c(100, 101, 102, 103, 104)
+seats <- as_tibble(
+  
+  permutations(n = 5,
+               r =5,
+               v = group_heights,
+               repeats.allowed = FALSE)
+  
+)
+seats
+ordered_seats <- seats %>% 
+  filter(V1 == 104, V2== 103, V3 == 102, V4 == 101, V5 == 100 )
+```
+
+```{r}
+prob_ordered_seats <- nrow(ordered_seats) / nrow(seats)
+prob_ordered_seats
+```
+
+Probability is 0.008
+
+
+
+
+
