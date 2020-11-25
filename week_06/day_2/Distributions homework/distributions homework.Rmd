@@ -1,0 +1,76 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+
+```{r}
+mobile_phones <- read_csv("data/20190928-items.csv")
+```
+
+```{r}
+# clean_names()
+mobile_phones <-  clean_names(mobile_phones)
+```
+
+
+```{r}
+ 
+brands <- table(mobile_phones$brand)
+brands
+```
+
+ from above table we can see Samsung was the highest number of phones in the dataset.
+ 
+
+Q3
+plot the distribution of phone ratings as a probability density, overlaying a fitted normal distribution. Do you think the normal distribution provides a good model of these ratings
+
+```{r}
+# mean & sd
+samsung_stats <- mobile_phones %>%
+  filter(brand == "Samsung") %>%
+  summarise(
+    num = n(),
+    mean(rating),
+    sd(rating)
+  )
+samsung_stats
+```
+
+
+```{r}
+# plot the distribution
+samsung_ratings <- mobile_phones %>%
+  filter(brand == "Samsung") %>%
+ ggplot(aes(x = rating)) +
+ geom_histogram(aes(y = ..density..), col = "white", bins = 30)+
+  
+ stat_function(
+   fun = dnorm,
+   args = list(
+     mean = samsung_stats$`mean(rating)`,
+     sd   = samsung_stats$`sd(rating)`
+     ),
+   col = "red"
+ )
+```
+
+Explanation:
+
+Our data has been plotted and a normal distribution curve fit. Although it looks a bit skewed, but in reality that value out on the left is probably an outlier rather than a pattern of data demonstrating skew.
+
+Q4
+
+```{r}
+mobile_phones %>%
+  filter(rating >= samsung_stats$`mean(rating)` - samsung_stats$`sd(rating)`) %>%
+  filter(rating <= samsung_stats$`mean(rating)` + samsung_stats$`sd(rating)`) %>%
+  summarise(prop_within_1sd = n() / nrow(mobile_phones))
+```
+
