@@ -1,0 +1,168 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(infer)
+library(janitor)
+```
+
+
+```{r}
+data("msleep")
+```
+
+Jabberwockies sleep for around 7 hours a night, on average. Perform an appropriate statistical test to determine whether the mean sleep_total in the sampled population of animal types differs from the typical value for jabberwockies.
+
+H0: μsleep_total=7 Ha: μsleep_total≠7 α=0.05
+
+```{r}
+null_distribution <- msleep %>%
+  specify(response = sleep_total) %>%
+  hypothesize(null = "point", mu = 7) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+obs_stat <- msleep %>%
+  specify(response = sleep_total) %>%
+  calculate(stat = "mean")
+null_distribution %>%
+  visualise() +
+  shade_p_value(direction = "both", obs_stat = obs_stat)
+```
+
+
+```{r}
+null_distribution %>%
+  get_p_value(direction = "both", obs_stat = obs_stat)
+```
+
+
+The p-value is below α and so we reject H0 and conclude that the mean sleep_total in the sampled population of animal types differs significantly from the value of 7 hours typical of jabberwockies. 
+
+
+
+
+```{r}
+unique(msleep$vore)
+```
+
+Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+
+H0: μsleep_total(omni)−μsleep_total(herbi)=0 Ha: μsleep_total(omni)−μsleep_total(herbi)>0 α=0.05
+
+```{r}
+null_distribution <- msleep %>%
+  filter(vore %in% c("omni", "herbi")) %>%
+  specify(sleep_total ~ vore) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 10000, type = "permute") %>%
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+obs_stat <- msleep %>%
+  filter(vore %in% c("omni", "herbi")) %>%
+  specify(sleep_total ~ vore) %>%
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+null_distribution %>%
+  visualise() +
+  shade_p_value(direction = "right", obs_stat = obs_stat)
+```
+
+```{r}
+null_distribution %>%
+  get_p_value(direction = "right", obs_stat = obs_stat)
+```
+
+The p-value is equal to or greater than α, and so we fail to reject H0. There is insufficient evidence to conclude that omnivores sleep for significantly longer than herbivores on average. 
+
+
+
+
+Q3. Perform an appropriate statistical test to determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%. 
+
+```{r}
+# a new is_domesticated variable for the analysis
+msleep_domesticated <- msleep %>%
+  mutate(is_domesticated = ifelse(conservation == "domesticated", "domesticated", "not_domesticated"))
+```
+
+
+
+
+
+
+
+
+
+
+
+Now we’ll do the hypothesis test!
+
+```{r}
+null_distribution <- msleep_domesticated %>%
+  filter(!is.na(is_domesticated)) %>%
+  specify(response = is_domesticated, success = "domesticated") %>%
+  hypothesize(null = "point", p = 0.05) %>%
+  generate(reps = 10000, type = "simulate") %>%
+  calculate(stat = "prop")
+```
+
+
+
+
+```{r}
+obs_stat <- msleep_domesticated %>%
+  filter(!is.na(conservation)) %>%
+  specify(response = is_domesticated, success = "domesticated") %>%
+  calculate(stat = "prop")
+obs_stat
+```
+
+
+
+```{r}
+null_distribution %>%
+  visualise() +
+  shade_p_value(direction = "right", obs_stat = obs_stat)
+```
+
+
+```{r}
+null_distribution %>%
+  get_p_value(direction = "right", obs_stat = obs_stat)
+```
+
+The p-value is less than α, so we reject H0 and accept that the proportion of domesticated animal types in the data is significantly greater than 5%.
+
+
+
+
+1.2 Hypothesis testing - interpretation
+1.2.1 Defining the Hypothesis
+
+1. Coffee shop problem. Significance level: 0.05, calculated p-value: 0.07
+
+Since our p-value 0.07 is greater than α=0.05 we fail to reject H0. There is not enough evidence to say that marketing advertisement have significantly increase the awarness.The p-value approached the borderline of significance.
+
+
+2. Website company problem. Significance level: 0.01, p-value: 0.006
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
