@@ -14,11 +14,24 @@ titanic %>%
   distinct(class)
 ```
 ```{r}
+titanic <- titanic %>%
+  mutate(crew = class %in% c("engineering crew", "victualling crew", "restaurant staff", "deck crew"))
 
-
-  
+titanic %>%
+  count(crew)
 ```
 
+```{r}
+titanic %>%
+  filter(crew) %>%
+  summarise(prob = sum(survived == "yes") / n())
+```
+
+```{r}
+titanic %>%
+  filter(!crew) %>%
+  summarise(prob = sum(survived == "yes") / n())
+```
 
 
 

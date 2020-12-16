@@ -52,9 +52,7 @@ server <- function(input, output) {
       filter(season == input$season) %>%
       ggplot() +
       aes(x = medal, y = count, fill = medal) +
-      geom_col(fill = case_when(input$medal == "Bronze" ~ "#e69900",
-                                input$medal == "Silver" ~ "gray40",
-                                input$medal == "Gold" ~ "gold"))
+      geom_col()
   })
 }
 shinyApp(ui = ui, server = server)
