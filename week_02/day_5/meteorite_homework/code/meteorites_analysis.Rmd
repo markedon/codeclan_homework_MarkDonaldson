@@ -1,0 +1,41 @@
+---
+title: "Meteorites Analysis"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library(tidyverse)
+
+meteorites <- read_csv("data/clean_data/meteorites.csv")
+```
+
+Finding the 10 largest meteorites in the data.
+
+```{r}
+meteorites %>% 
+  slice_max(mass, n = 10) %>% 
+  select(name, year, mass)
+```
+Finding the average mass of meteorites that fell, vs. those that were found.
+
+```{r}
+meteorites %>% 
+  group_by(fall) %>% 
+  summarise(
+    avg_mass = mean(mass)
+  )
+```
+
+The number of meteorites found per year, for every year since 2000.
+
+```{r}
+meteorites %>%
+  filter(year >= 2000) %>% 
+  group_by(year) %>% 
+  summarise(
+    n = n()
+  )
+```
+
