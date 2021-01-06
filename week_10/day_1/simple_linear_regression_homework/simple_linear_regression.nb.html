@@ -1759,8 +1759,149 @@ summary {
 
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGphbml0b3IpXG5saWJyYXJ5KG1vZGVscilcbmxpYnJhcnkoYnJvb20pXG5gYGAifQ== -->
+<pre class="r"><code>library(tidyverse)
+library(janitor)
+library(modelr)
+library(broom)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChsbShkaXN0fnNwZWVkLGRhdGE9Y2FycykpIFxuYGBgIn0= -->
+<pre class="r"><code>plot(lm(dist~speed,data=cars)) </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>2 project_management analysis</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJqZWN0X21hbmFnX2RhdGEgPC0gcmVhZF9jc3YoXCJkYXRhL3Byb2plY3RfbWFuYWdlbWVudC5jc3ZcIilcbmBgYCJ9 -->
+<pre class="r"><code>prject_manag_data &lt;- read_csv(&quot;data/project_management.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Plot the data, taking estimated_length as the independent variable and actual_length as the dependent variable.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJqZWN0X21hbmFnX2RhdGEgJT4lXG4gIGdncGxvdChhZXMoeCA9IGVzdGltYXRlZF9sZW5ndGgsIHkgPSBhY3R1YWxfbGVuZ3RoKSkrXG4gIGdlb21fcG9pbnQoKVxuYGBgIn0= -->
+<pre class="r"><code>prject_manag_data %&gt;%
+  ggplot(aes(x = estimated_length, y = actual_length))+
+  geom_point()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Label the data points with their row number in the data frame using geom_text() [Hint - you can pass aes(label = 1:nrow(project)) to this layer to generate row index labels]</p>
+<p>Identify by eye any points you think might be outliers and note their labels.</p>
+<p>Further split your outliers into those you think are ‘influential’ or ‘non-influential’ based on a visual assessment of their leverage.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdCA8LSBwcmplY3RfbWFuYWdfZGF0YSAlPiVcbiAgZ2dwbG90KGFlcyh4ID0gZXN0aW1hdGVkX2xlbmd0aCwgeSA9IGFjdHVhbF9sZW5ndGgpKStcbiAgZ2VvbV90ZXh0KGFlcyhsYWJlbCA9IDE6bnJvdyhwcmplY3RfbWFuYWdfZGF0YSkpLCBudWRnZV94ID0gMC4yLCBudWRnZV95ID0gMSkrXG4gIGdlb21fcG9pbnQoKVxucGxvdFxuYGBgIn0= -->
+<pre class="r"><code>plot &lt;- prject_manag_data %&gt;%
+  ggplot(aes(x = estimated_length, y = actual_length))+
+  geom_text(aes(label = 1:nrow(prject_manag_data)), nudge_x = 0.2, nudge_y = 1)+
+  geom_point()
+plot</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Points 5 and 18 both look like outliers, and we might predict point 5 to be ‘influential’ as it has high leverage, and point 18</p>
+<p>to be ‘non-influential’ given it has low leverage.</p>
+<p>Task</p>
+<p>Regress actual_length on estimated_length and confirm your visual assessment of which points are ‘influential’ or ‘non-influential’ outliers based on Cook’s distance. You can get a useful plot of Cook’s distance by passing argument which = 4 to autoplot(). Or try the base R plot() function for comparison [e.g. plot(model)]!</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWwgPC0gbG0oYWN0dWFsX2xlbmd0aCB+IGVzdGltYXRlZF9sZW5ndGgsIGRhdGEgPSBwcmplY3RfbWFuYWdfZGF0YSlcbm1vZGVsXG5gYGAifQ== -->
+<pre class="r"><code>model &lt;- lm(actual_length ~ estimated_length, data = prject_manag_data)
+model</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ2ZvcnRpZnkpXG5hdXRvcGxvdChtb2RlbCwgd2hpY2ggPSA0KVxuYGBgIn0= -->
+<pre class="r"><code>library(ggfortify)
+autoplot(model, which = 4)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChtb2RlbClcbmBgYCJ9 -->
+<pre class="r"><code>plot(model)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The Cook’s distance plot confirms that point 5 is an ‘influential’ outlier, as it lies above 1.</p>
+<p>Point 18 is an outlier, but is ‘non-influential’, as it has a Cook’s distance similar to the other points.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub21pdF8xOCA8LSBwcmplY3RfbWFuYWdfZGF0YSAlPiVcbiAgc2xpY2UoLTE4KVxub21pdF8xOF9tb2RlbCA8LSBsbShhY3R1YWxfbGVuZ3RoIH4gZXN0aW1hdGVkX2xlbmd0aCwgZGF0YSA9IG9taXRfMTgpXG5vbWl0XzE4X21vZGVsXG5gYGAifQ== -->
+<pre class="r"><code>omit_18 &lt;- prject_manag_data %&gt;%
+  slice(-18)
+omit_18_model &lt;- lm(actual_length ~ estimated_length, data = omit_18)
+omit_18_model</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The intercepts differ by 0.175 in 1.416, i.e. by 12%. The coefficients differ by only 0.002 in 1.223, i.e. by 0.2%. These support classifying this point as ‘non-influential’.</p>
+<p>Task</p>
+<p>Plot the data points, this regression line and the regression line for the full data set. How different are the lines?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtb2RlbHIpXG5wcm9qZWN0IDwtIHByamVjdF9tYW5hZ19kYXRhICU+JVxuICBhZGRfcHJlZGljdGlvbnMobW9kZWwsIHZhciA9IFwiZnVsbF9tb2RlbF9wcmVkXCIpICU+JVxuICBhZGRfcHJlZGljdGlvbnMob21pdF8xOF9tb2RlbCwgdmFyID0gXCJvbWl0XzE4X21vZGVsX3ByZWRcIilcbnByb2plY3QgJT4lXG4gIGdncGxvdChhZXMoeCA9IGVzdGltYXRlZF9sZW5ndGgpKSArXG4gIGdlb21fcG9pbnQoYWVzKHkgPSBhY3R1YWxfbGVuZ3RoKSkgK1xuICBnZW9tX2xpbmUoYWVzKHkgPSBmdWxsX21vZGVsX3ByZWQpLCBjb2wgPSBcInJlZFwiKSArXG4gIGdlb21fbGluZShhZXMoeSA9IG9taXRfMThfbW9kZWxfcHJlZCksIGNvbCA9IFwiYmx1ZVwiKVxuYGBgIn0= -->
+<pre class="r"><code>library(modelr)
+project &lt;- prject_manag_data %&gt;%
+  add_predictions(model, var = &quot;full_model_pred&quot;) %&gt;%
+  add_predictions(omit_18_model, var = &quot;omit_18_model_pred&quot;)
+project %&gt;%
+  ggplot(aes(x = estimated_length)) +
+  geom_point(aes(y = actual_length)) +
+  geom_line(aes(y = full_model_pred), col = &quot;red&quot;) +
+  geom_line(aes(y = omit_18_model_pred), col = &quot;blue&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The regression line lacking point 18 is slightly shifted upward, but it’s difficult to distinguish the two lines!</p>
+<p>Repeat the procedure above, but this time omitting one of your influential outliers.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub21pdF81IDwtIHByamVjdF9tYW5hZ19kYXRhICU+JVxuICBzbGljZSgtNSlcbm9taXRfNV9tb2RlbCA8LSBsbShhY3R1YWxfbGVuZ3RoIH4gZXN0aW1hdGVkX2xlbmd0aCwgZGF0YSA9IG9taXRfNSlcbm9taXRfNV9tb2RlbFxuYGBgIn0= -->
+<pre class="r"><code>omit_5 &lt;- prject_manag_data %&gt;%
+  slice(-5)
+omit_5_model &lt;- lm(actual_length ~ estimated_length, data = omit_5)
+omit_5_model</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The intercepts differ by 2.965 in 1.416, i.e. by 209%. The coefficients differ by 0.212 in 1.223, i.e. by 17%. Omitting this point leads to much larger differences in the regression parameters than the omission of point 18, and justify labelling point 5 as an influential outlier.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJqZWN0X21hbmFnX2RhdGEgPC0gcHJqZWN0X21hbmFnX2RhdGEgJT4lXG4gIGFkZF9wcmVkaWN0aW9ucyhvbWl0XzVfbW9kZWwsIHZhciA9IFwib21pdF81X21vZGVsX3ByZWRcIilcbnByamVjdF9tYW5hZ19kYXRhICU+JVxuICBnZ3Bsb3QoYWVzKHggPSBlc3RpbWF0ZWRfbGVuZ3RoKSkgK1xuICBnZW9tX3BvaW50KGFlcyh5ID0gYWN0dWFsX2xlbmd0aCkpICtcbiAgZ2VvbV9saW5lKGFlcyh5ID0gZnVsbF9tb2RlbF9wcmVkKSwgY29sID0gXCJyZWRcIikgK1xuICBnZW9tX2xpbmUoYWVzKHkgPSBvbWl0XzVfbW9kZWxfcHJlZCksIGNvbCA9IFwiYmx1ZVwiKVxuYGBgIn0= -->
+<pre class="r"><code>prject_manag_data &lt;- prject_manag_data %&gt;%
+  add_predictions(omit_5_model, var = &quot;omit_5_model_pred&quot;)
+prject_manag_data %&gt;%
+  ggplot(aes(x = estimated_length)) +
+  geom_point(aes(y = actual_length)) +
+  geom_line(aes(y = full_model_pred), col = &quot;red&quot;) +
+  geom_line(aes(y = omit_5_model_pred), col = &quot;blue&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Return to your fitted model for the complete data set and examine and comment upon the Residuals vs Fitted, Normal Q-Q and Scale-Location diagnostic plots. Are the regression assumptions reasonably satisfied?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXV0b3Bsb3QobW9kZWwpXG5gYGAifQ== -->
+<pre class="r"><code>autoplot(model)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The Residuals vs Fitted plot shows a slight downward trend with increase in fitted value, but this is not very significant. The Normal Q-Q plot indicates that all residuals are normally distributed, save for the two outliers we have identified. The smoothed line in the Scale-Location plot does show a slight U-shape, but there is no compelling evidence for a systematic increase or decrease in variance of the residuals with increase in fitted value. Overall, the regression assumptions seem reasonably well satisfied, but we would be wise to check the data and processing of points 5 and 18 again.</p>
+<!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShqYW5pdG9yKQpsaWJyYXJ5KG1vZGVscikKbGlicmFyeShicm9vbSkKYGBgCgoKYGBge3J9CnBsb3QobG0oZGlzdH5zcGVlZCxkYXRhPWNhcnMpKSAKYGBgCgoyIHByb2plY3RfbWFuYWdlbWVudCBhbmFseXNpcwoKYGBge3J9CnByamVjdF9tYW5hZ19kYXRhIDwtIHJlYWRfY3N2KCJkYXRhL3Byb2plY3RfbWFuYWdlbWVudC5jc3YiKQpgYGAKCgoKUGxvdCB0aGUgZGF0YSwgdGFraW5nIGVzdGltYXRlZF9sZW5ndGggYXMgdGhlIGluZGVwZW5kZW50IHZhcmlhYmxlIGFuZCBhY3R1YWxfbGVuZ3RoIGFzIHRoZSBkZXBlbmRlbnQgdmFyaWFibGUuCgoKYGBge3J9CnByamVjdF9tYW5hZ19kYXRhICU+JQogIGdncGxvdChhZXMoeCA9IGVzdGltYXRlZF9sZW5ndGgsIHkgPSBhY3R1YWxfbGVuZ3RoKSkrCiAgZ2VvbV9wb2ludCgpCmBgYAoKTGFiZWwgdGhlIGRhdGEgcG9pbnRzIHdpdGggdGhlaXIgcm93IG51bWJlciBpbiB0aGUgZGF0YSBmcmFtZSB1c2luZyBnZW9tX3RleHQoKSBbSGludCAtIHlvdSBjYW4gcGFzcyBhZXMobGFiZWwgPSAxOm5yb3cocHJvamVjdCkpIHRvIHRoaXMgbGF5ZXIgdG8gZ2VuZXJhdGUgcm93IGluZGV4IGxhYmVsc10KCklkZW50aWZ5IGJ5IGV5ZSBhbnkgcG9pbnRzIHlvdSB0aGluayBtaWdodCBiZSBvdXRsaWVycyBhbmQgbm90ZSB0aGVpciBsYWJlbHMuCgpGdXJ0aGVyIHNwbGl0IHlvdXIgb3V0bGllcnMgaW50byB0aG9zZSB5b3UgdGhpbmsgYXJlIOKAmGluZmx1ZW50aWFs4oCZIG9yIOKAmG5vbi1pbmZsdWVudGlhbOKAmSBiYXNlZCBvbiBhIHZpc3VhbCBhc3Nlc3NtZW50IG9mIHRoZWlyIGxldmVyYWdlLgoKCmBgYHtyfQpwbG90IDwtIHByamVjdF9tYW5hZ19kYXRhICU+JQogIGdncGxvdChhZXMoeCA9IGVzdGltYXRlZF9sZW5ndGgsIHkgPSBhY3R1YWxfbGVuZ3RoKSkrCiAgZ2VvbV90ZXh0KGFlcyhsYWJlbCA9IDE6bnJvdyhwcmplY3RfbWFuYWdfZGF0YSkpLCBudWRnZV94ID0gMC4yLCBudWRnZV95ID0gMSkrCiAgZ2VvbV9wb2ludCgpCnBsb3QKYGBgClBvaW50cyA1IGFuZCAxOCBib3RoIGxvb2sgbGlrZSBvdXRsaWVycywgYW5kIHdlIG1pZ2h0IHByZWRpY3QgcG9pbnQgNSB0byBiZSDigJhpbmZsdWVudGlhbOKAmSBhcyBpdCBoYXMgaGlnaCBsZXZlcmFnZSwgYW5kIHBvaW50IDE4Cgp0byBiZSDigJhub24taW5mbHVlbnRpYWzigJkgZ2l2ZW4gaXQgaGFzIGxvdyBsZXZlcmFnZS4KCgoKVGFzayAKClJlZ3Jlc3MgYWN0dWFsX2xlbmd0aCBvbiBlc3RpbWF0ZWRfbGVuZ3RoIGFuZCBjb25maXJtIHlvdXIgdmlzdWFsIGFzc2Vzc21lbnQgb2Ygd2hpY2ggcG9pbnRzIGFyZSDigJhpbmZsdWVudGlhbOKAmSBvciDigJhub24taW5mbHVlbnRpYWzigJkgb3V0bGllcnMgYmFzZWQgb24gQ29va+KAmXMgZGlzdGFuY2UuIFlvdSBjYW4gZ2V0IGEgdXNlZnVsIHBsb3Qgb2YgQ29va+KAmXMgZGlzdGFuY2UgYnkgcGFzc2luZyBhcmd1bWVudCB3aGljaCA9IDQgdG8gYXV0b3Bsb3QoKS4gT3IgdHJ5IHRoZSBiYXNlIFIgcGxvdCgpIGZ1bmN0aW9uIGZvciBjb21wYXJpc29uIFtlLmcuIHBsb3QobW9kZWwpXSEKCgpgYGB7cn0KbW9kZWwgPC0gbG0oYWN0dWFsX2xlbmd0aCB+IGVzdGltYXRlZF9sZW5ndGgsIGRhdGEgPSBwcmplY3RfbWFuYWdfZGF0YSkKbW9kZWwKYGBgCgpgYGB7cn0KbGlicmFyeShnZ2ZvcnRpZnkpCmF1dG9wbG90KG1vZGVsLCB3aGljaCA9IDQpCmBgYAoKCmBgYHtyfQpwbG90KG1vZGVsKQpgYGAKClRoZSBDb29r4oCZcyBkaXN0YW5jZSBwbG90IGNvbmZpcm1zIHRoYXQgcG9pbnQgNSBpcyBhbiDigJhpbmZsdWVudGlhbOKAmSBvdXRsaWVyLCBhcyBpdCBsaWVzIGFib3ZlIDEuCgpQb2ludCAxOCBpcyBhbiBvdXRsaWVyLCBidXQgaXMg4oCYbm9uLWluZmx1ZW50aWFs4oCZLCBhcyBpdCBoYXMgYSBDb29r4oCZcyBkaXN0YW5jZSBzaW1pbGFyIHRvIHRoZSBvdGhlciBwb2ludHMuCgpgYGB7cn0Kb21pdF8xOCA8LSBwcmplY3RfbWFuYWdfZGF0YSAlPiUKICBzbGljZSgtMTgpCm9taXRfMThfbW9kZWwgPC0gbG0oYWN0dWFsX2xlbmd0aCB+IGVzdGltYXRlZF9sZW5ndGgsIGRhdGEgPSBvbWl0XzE4KQpvbWl0XzE4X21vZGVsCmBgYAoKVGhlIGludGVyY2VwdHMgZGlmZmVyIGJ5IDAuMTc1IGluIDEuNDE2LCBpLmUuIGJ5IDEyJS4gVGhlIGNvZWZmaWNpZW50cyBkaWZmZXIgYnkgb25seSAwLjAwMiBpbiAxLjIyMywgaS5lLiBieSAwLjIlLiBUaGVzZSBzdXBwb3J0IGNsYXNzaWZ5aW5nIHRoaXMgcG9pbnQgYXMg4oCYbm9uLWluZmx1ZW50aWFs4oCZLiAKCgpUYXNrCgpQbG90IHRoZSBkYXRhIHBvaW50cywgdGhpcyByZWdyZXNzaW9uIGxpbmUgYW5kIHRoZSByZWdyZXNzaW9uIGxpbmUgZm9yIHRoZSBmdWxsIGRhdGEgc2V0LiBIb3cgZGlmZmVyZW50IGFyZSB0aGUgbGluZXM/CgpgYGB7cn0KbGlicmFyeShtb2RlbHIpCnByb2plY3QgPC0gcHJqZWN0X21hbmFnX2RhdGEgJT4lCiAgYWRkX3ByZWRpY3Rpb25zKG1vZGVsLCB2YXIgPSAiZnVsbF9tb2RlbF9wcmVkIikgJT4lCiAgYWRkX3ByZWRpY3Rpb25zKG9taXRfMThfbW9kZWwsIHZhciA9ICJvbWl0XzE4X21vZGVsX3ByZWQiKQpwcm9qZWN0ICU+JQogIGdncGxvdChhZXMoeCA9IGVzdGltYXRlZF9sZW5ndGgpKSArCiAgZ2VvbV9wb2ludChhZXMoeSA9IGFjdHVhbF9sZW5ndGgpKSArCiAgZ2VvbV9saW5lKGFlcyh5ID0gZnVsbF9tb2RlbF9wcmVkKSwgY29sID0gInJlZCIpICsKICBnZW9tX2xpbmUoYWVzKHkgPSBvbWl0XzE4X21vZGVsX3ByZWQpLCBjb2wgPSAiYmx1ZSIpCmBgYAoKVGhlIHJlZ3Jlc3Npb24gbGluZSBsYWNraW5nIHBvaW50IDE4IGlzIHNsaWdodGx5IHNoaWZ0ZWQgdXB3YXJkLCBidXQgaXTigJlzIGRpZmZpY3VsdCB0byBkaXN0aW5ndWlzaCB0aGUgdHdvIGxpbmVzIQoKUmVwZWF0IHRoZSBwcm9jZWR1cmUgYWJvdmUsIGJ1dCB0aGlzIHRpbWUgb21pdHRpbmcgb25lIG9mIHlvdXIgaW5mbHVlbnRpYWwgb3V0bGllcnMuCgoKYGBge3J9Cm9taXRfNSA8LSBwcmplY3RfbWFuYWdfZGF0YSAlPiUKICBzbGljZSgtNSkKb21pdF81X21vZGVsIDwtIGxtKGFjdHVhbF9sZW5ndGggfiBlc3RpbWF0ZWRfbGVuZ3RoLCBkYXRhID0gb21pdF81KQpvbWl0XzVfbW9kZWwKYGBgCgoKVGhlIGludGVyY2VwdHMgZGlmZmVyIGJ5IDIuOTY1IGluIDEuNDE2LCBpLmUuIGJ5IDIwOSUuIFRoZSBjb2VmZmljaWVudHMgZGlmZmVyIGJ5IDAuMjEyIGluIDEuMjIzLCBpLmUuIGJ5IDE3JS4gT21pdHRpbmcgdGhpcyBwb2ludCBsZWFkcyB0byBtdWNoIGxhcmdlciBkaWZmZXJlbmNlcyBpbiB0aGUgcmVncmVzc2lvbiBwYXJhbWV0ZXJzIHRoYW4gdGhlIG9taXNzaW9uIG9mIHBvaW50IDE4LCBhbmQganVzdGlmeSBsYWJlbGxpbmcgcG9pbnQgNSBhcyBhbiBpbmZsdWVudGlhbCBvdXRsaWVyLgoKCmBgYHtyfQpwcmplY3RfbWFuYWdfZGF0YSA8LSBwcmplY3RfbWFuYWdfZGF0YSAlPiUKICBhZGRfcHJlZGljdGlvbnMob21pdF81X21vZGVsLCB2YXIgPSAib21pdF81X21vZGVsX3ByZWQiKQpwcmplY3RfbWFuYWdfZGF0YSAlPiUKICBnZ3Bsb3QoYWVzKHggPSBlc3RpbWF0ZWRfbGVuZ3RoKSkgKwogIGdlb21fcG9pbnQoYWVzKHkgPSBhY3R1YWxfbGVuZ3RoKSkgKwogIGdlb21fbGluZShhZXMoeSA9IGZ1bGxfbW9kZWxfcHJlZCksIGNvbCA9ICJyZWQiKSArCiAgZ2VvbV9saW5lKGFlcyh5ID0gb21pdF81X21vZGVsX3ByZWQpLCBjb2wgPSAiYmx1ZSIpCmBgYAoKClJldHVybiB0byB5b3VyIGZpdHRlZCBtb2RlbCBmb3IgdGhlIGNvbXBsZXRlIGRhdGEgc2V0IGFuZCBleGFtaW5lIGFuZCBjb21tZW50IHVwb24gdGhlIFJlc2lkdWFscyB2cyBGaXR0ZWQsIE5vcm1hbCBRLVEgYW5kIFNjYWxlLUxvY2F0aW9uIGRpYWdub3N0aWMgcGxvdHMuIEFyZSB0aGUgcmVncmVzc2lvbiBhc3N1bXB0aW9ucyByZWFzb25hYmx5IHNhdGlzZmllZD8KCmBgYHtyfQphdXRvcGxvdChtb2RlbCkKYGBgCgpUaGUgUmVzaWR1YWxzIHZzIEZpdHRlZCBwbG90IHNob3dzIGEgc2xpZ2h0IGRvd253YXJkIHRyZW5kIHdpdGggaW5jcmVhc2UgaW4gZml0dGVkIHZhbHVlLCBidXQgdGhpcyBpcyBub3QgdmVyeSBzaWduaWZpY2FudC4gVGhlIE5vcm1hbCBRLVEgcGxvdCBpbmRpY2F0ZXMgdGhhdCBhbGwgcmVzaWR1YWxzIGFyZSBub3JtYWxseSBkaXN0cmlidXRlZCwgc2F2ZSBmb3IgdGhlIHR3byBvdXRsaWVycyB3ZSBoYXZlIGlkZW50aWZpZWQuIFRoZSBzbW9vdGhlZCBsaW5lIGluIHRoZSBTY2FsZS1Mb2NhdGlvbiBwbG90IGRvZXMgc2hvdyBhIHNsaWdodCBVLXNoYXBlLCBidXQgdGhlcmUgaXMgbm8gY29tcGVsbGluZyBldmlkZW5jZSBmb3IgYSBzeXN0ZW1hdGljIGluY3JlYXNlIG9yIGRlY3JlYXNlIGluIHZhcmlhbmNlIG9mIHRoZSByZXNpZHVhbHMgd2l0aCBpbmNyZWFzZSBpbiBmaXR0ZWQgdmFsdWUuIE92ZXJhbGwsIHRoZSByZWdyZXNzaW9uIGFzc3VtcHRpb25zIHNlZW0gcmVhc29uYWJseSB3ZWxsIHNhdGlzZmllZCwgYnV0IHdlIHdvdWxkIGJlIHdpc2UgdG8gY2hlY2sgdGhlIGRhdGEgYW5kIHByb2Nlc3Npbmcgb2YgcG9pbnRzIDUgYW5kIDE4IGFnYWluLgoKCgoKCgoKCgoKCgoKCgoKCg==</div>
 
 
 

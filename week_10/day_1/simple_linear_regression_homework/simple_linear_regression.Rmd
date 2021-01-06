@@ -4,4 +4,153 @@ output: html_notebook
 ---
 
 
+```{r}
+library(tidyverse)
+library(janitor)
+library(modelr)
+library(broom)
+```
+
+
+```{r}
+plot(lm(dist~speed,data=cars)) 
+```
+
+2 project_management analysis
+
+```{r}
+prject_manag_data <- read_csv("data/project_management.csv")
+```
+
+
+
+Plot the data, taking estimated_length as the independent variable and actual_length as the dependent variable.
+
+
+```{r}
+prject_manag_data %>%
+  ggplot(aes(x = estimated_length, y = actual_length))+
+  geom_point()
+```
+
+Label the data points with their row number in the data frame using geom_text() [Hint - you can pass aes(label = 1:nrow(project)) to this layer to generate row index labels]
+
+Identify by eye any points you think might be outliers and note their labels.
+
+Further split your outliers into those you think are ‘influential’ or ‘non-influential’ based on a visual assessment of their leverage.
+
+
+```{r}
+plot <- prject_manag_data %>%
+  ggplot(aes(x = estimated_length, y = actual_length))+
+  geom_text(aes(label = 1:nrow(prject_manag_data)), nudge_x = 0.2, nudge_y = 1)+
+  geom_point()
+plot
+```
+Points 5 and 18 both look like outliers, and we might predict point 5 to be ‘influential’ as it has high leverage, and point 18
+
+to be ‘non-influential’ given it has low leverage.
+
+
+
+Task 
+
+Regress actual_length on estimated_length and confirm your visual assessment of which points are ‘influential’ or ‘non-influential’ outliers based on Cook’s distance. You can get a useful plot of Cook’s distance by passing argument which = 4 to autoplot(). Or try the base R plot() function for comparison [e.g. plot(model)]!
+
+
+```{r}
+model <- lm(actual_length ~ estimated_length, data = prject_manag_data)
+model
+```
+
+```{r}
+library(ggfortify)
+autoplot(model, which = 4)
+```
+
+
+```{r}
+plot(model)
+```
+
+The Cook’s distance plot confirms that point 5 is an ‘influential’ outlier, as it lies above 1.
+
+Point 18 is an outlier, but is ‘non-influential’, as it has a Cook’s distance similar to the other points.
+
+```{r}
+omit_18 <- prject_manag_data %>%
+  slice(-18)
+omit_18_model <- lm(actual_length ~ estimated_length, data = omit_18)
+omit_18_model
+```
+
+The intercepts differ by 0.175 in 1.416, i.e. by 12%. The coefficients differ by only 0.002 in 1.223, i.e. by 0.2%. These support classifying this point as ‘non-influential’. 
+
+
+Task
+
+Plot the data points, this regression line and the regression line for the full data set. How different are the lines?
+
+```{r}
+library(modelr)
+project <- prject_manag_data %>%
+  add_predictions(model, var = "full_model_pred") %>%
+  add_predictions(omit_18_model, var = "omit_18_model_pred")
+project %>%
+  ggplot(aes(x = estimated_length)) +
+  geom_point(aes(y = actual_length)) +
+  geom_line(aes(y = full_model_pred), col = "red") +
+  geom_line(aes(y = omit_18_model_pred), col = "blue")
+```
+
+The regression line lacking point 18 is slightly shifted upward, but it’s difficult to distinguish the two lines!
+
+Repeat the procedure above, but this time omitting one of your influential outliers.
+
+
+```{r}
+omit_5 <- prject_manag_data %>%
+  slice(-5)
+omit_5_model <- lm(actual_length ~ estimated_length, data = omit_5)
+omit_5_model
+```
+
+
+The intercepts differ by 2.965 in 1.416, i.e. by 209%. The coefficients differ by 0.212 in 1.223, i.e. by 17%. Omitting this point leads to much larger differences in the regression parameters than the omission of point 18, and justify labelling point 5 as an influential outlier.
+
+
+```{r}
+prject_manag_data <- prject_manag_data %>%
+  add_predictions(omit_5_model, var = "omit_5_model_pred")
+prject_manag_data %>%
+  ggplot(aes(x = estimated_length)) +
+  geom_point(aes(y = actual_length)) +
+  geom_line(aes(y = full_model_pred), col = "red") +
+  geom_line(aes(y = omit_5_model_pred), col = "blue")
+```
+
+
+Return to your fitted model for the complete data set and examine and comment upon the Residuals vs Fitted, Normal Q-Q and Scale-Location diagnostic plots. Are the regression assumptions reasonably satisfied?
+
+```{r}
+autoplot(model)
+```
+
+The Residuals vs Fitted plot shows a slight downward trend with increase in fitted value, but this is not very significant. The Normal Q-Q plot indicates that all residuals are normally distributed, save for the two outliers we have identified. The smoothed line in the Scale-Location plot does show a slight U-shape, but there is no compelling evidence for a systematic increase or decrease in variance of the residuals with increase in fitted value. Overall, the regression assumptions seem reasonably well satisfied, but we would be wise to check the data and processing of points 5 and 18 again.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
