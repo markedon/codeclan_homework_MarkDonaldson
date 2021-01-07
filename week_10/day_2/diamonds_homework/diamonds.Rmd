@@ -4,4 +4,151 @@ output: html_notebook
 ---
 
 
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggiraphExtra)
+```
+
+Load the diamonds.csv data set and undertake an initial exploration of the data
+
+```{r}
+diamonds <- read_csv("diamonds.csv")
+```
+
+We expect the carat of the diamonds to be strong correlated with the physical dimensions x, y and z. Use ggpairs() to investigate correlations between these four variables.
+
+```{r}
+ggpairs(diamonds[,c("carat", "x", "y", "z")])
+```
+
+There is significant correlations. Let’s drop columns x, y and z from the dataset, in preparation to use only carat going forward.
+
+```{r}
+diamonds_tidy <- diamonds %>%
+            select(-x, -y, -z)
+diamonds_tidy
+```
+
+
+We are interested in developing a regression model for the price of a diamond in terms of the possible predictor variables in the dataset.
+
+Use ggpairs() to investigate correlations between price and the predictors 
+
+```{r}
+ggpairs(diamonds_tidy)
+```
+carat is strongly correlated with price. Boxplots of price split by cut, color and particularly clarity also show some variation.
+
+
+Perform further ggplot visualisations of any significant correlations you find
+
+```{r}
+diamonds_tidy %>%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+diamonds_tidy %>%
+  ggplot(aes(x = cut, y = price)) +
+  geom_boxplot()
+```
+
+```{r}
+diamonds_tidy %>%
+  ggplot(aes(x = color, y = price)) +
+  geom_boxplot()
+```
+
+
+```{r}
+diamonds_tidy %>%
+  ggplot(aes(x = clarity, y = price)) +
+  geom_boxplot()
+```
+
+
+
+5. Shortly we may try a regression fit using one or more of the categorical predictors cut, clarity and color, so let’s investigate these predictors:
+
+1.1. Investigate the factor levels of these predictors. How many dummy variables do you expect for each of them?
+
+```{r}
+# Values
+unique(diamonds_tidy$cut)
+unique(diamonds_tidy$clarity)
+unique(diamonds_tidy$color)
+```
+
+there are diffrent distinct values for the cut, color and clarity column
+
+Use the dummy_cols() function in the fastDummies package to generate dummies for these predictors and check the number of dummies in each case.
+
+```{r}
+library(fastDummies)
+diamonds_dummies <- dummy_cols(diamonds, select_columns = c("cut", "clarity", "color"), remove_first_dummy = TRUE)
+glimpse(diamonds_dummies)
+```
+
+6. Going forward we’ll let R handle dummy variable creation for categorical predictors in regression fitting (remember lm() will generate the correct numbers of dummy levels automatically, absorbing one of the levels into the intercept as a reference level)
+
+i) First, we’ll start with simple linear regression. Regress price on carat and check the regression diagnostics
+
+```{r}
+model <- lm(formula = price ~ carat, data = diamonds_tidy)
+plot(model)
+```
+
+```{r}
+summary(model)
+```
+
+The residuals show systematic variation, significant deviation from normality and heteroscedasticity.
+
+The r2 value is 0.8439, and the residual standard error is 1549. To put the latter in context, let’s see the boxplot of volume.
+
+
+
+1.2 Run a regression with one or both of the predictor and response variables log() transformed and recheck the diagnostics. Do you see any improvement?
+
+```{r}
+model2_logx <- lm(price ~ log(carat), data = diamonds_tidy)
+plot(model2_logx)
+```
+
+```{r}
+mod2_logy <- lm(log(price) ~ carat, data = diamonds_tidy)
+plot(mod2_logy)
+```
+
+```{r}
+mod2_logxlogy <- lm(log(price) ~ log(carat), data = diamonds_tidy)
+plot(mod2_logxlogy)
+```
+
+Log transformation of both variables is required to get close to satisfying the regression assumptions.
+
+1.3 Let’s use log() transformations of both predictor and response. Next, experiment with adding a single categorical predictor into the model. Which categorical predictor is best? [Hint - investigate r2 values]
+
+
+```{r}
+mod3_cut <- lm(log(price) ~ log(carat) + cut, data = diamonds_tidy)
+summary(mod3_cut)
+```
+
+
+```{r}
+mod3_color <- lm(log(price) ~ log(carat) + color, data = diamonds_tidy)
+summary(mod3_color)
+```
+
+```{r}
+mod3_clarity <- lm(log(price) ~ log(carat) + clarity, data = diamonds_tidy)
+summary(mod3_clarity)
+```
+
+clarity leads to a model with highest r^2, all predictors are significant
+
 

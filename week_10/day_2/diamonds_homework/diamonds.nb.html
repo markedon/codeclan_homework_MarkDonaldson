@@ -1759,8 +1759,191 @@ summary {
 
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KEdHYWxseSlcbmxpYnJhcnkoZ2dpcmFwaEV4dHJhKVxuYGBgIn0= -->
+<pre class="r"><code>library(tidyverse)
+library(GGally)
+library(ggiraphExtra)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Load the diamonds.csv data set and undertake an initial exploration of the data</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlhbW9uZHMgPC0gcmVhZF9jc3YoXCJkaWFtb25kcy5jc3ZcIilcbmBgYCJ9 -->
+<pre class="r"><code>diamonds &lt;- read_csv(&quot;diamonds.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>We expect the carat of the diamonds to be strong correlated with the physical dimensions x, y and z. Use ggpairs() to investigate correlations between these four variables.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dwYWlycyhkaWFtb25kc1ssYyhcImNhcmF0XCIsIFwieFwiLCBcInlcIiwgXCJ6XCIpXSlcbmBgYCJ9 -->
+<pre class="r"><code>ggpairs(diamonds[,c(&quot;carat&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;)])</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>There is significant correlations. Let’s drop columns x, y and z from the dataset, in preparation to use only carat going forward.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlhbW9uZHNfdGlkeSA8LSBkaWFtb25kcyAlPiVcbiAgICAgICAgICAgIHNlbGVjdCgteCwgLXksIC16KVxuZGlhbW9uZHNfdGlkeVxuYGBgIn0= -->
+<pre class="r"><code>diamonds_tidy &lt;- diamonds %&gt;%
+            select(-x, -y, -z)
+diamonds_tidy</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>We are interested in developing a regression model for the price of a diamond in terms of the possible predictor variables in the dataset.</p>
+<p>Use ggpairs() to investigate correlations between price and the predictors</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dwYWlycyhkaWFtb25kc190aWR5KVxuYGBgIn0= -->
+<pre class="r"><code>ggpairs(diamonds_tidy)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>carat is strongly correlated with price. Boxplots of price split by cut, color and particularly clarity also show some variation.</p>
+<p>Perform further ggplot visualisations of any significant correlations you find</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlhbW9uZHNfdGlkeSAlPiVcbiAgZ2dwbG90KGFlcyh4ID0gY2FyYXQsIHkgPSBwcmljZSkpICtcbiAgZ2VvbV9wb2ludCgpICtcbiAgZ2VvbV9zbW9vdGgobWV0aG9kID0gXCJsbVwiLCBzZSA9IEZBTFNFKVxuYGBgIn0= -->
+<pre class="r"><code>diamonds_tidy %&gt;%
+  ggplot(aes(x = carat, y = price)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlhbW9uZHNfdGlkeSAlPiVcbiAgZ2dwbG90KGFlcyh4ID0gY3V0LCB5ID0gcHJpY2UpKSArXG4gIGdlb21fYm94cGxvdCgpXG5gYGAifQ== -->
+<pre class="r"><code>diamonds_tidy %&gt;%
+  ggplot(aes(x = cut, y = price)) +
+  geom_boxplot()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlhbW9uZHNfdGlkeSAlPiVcbiAgZ2dwbG90KGFlcyh4ID0gY29sb3IsIHkgPSBwcmljZSkpICtcbiAgZ2VvbV9ib3hwbG90KClcbmBgYCJ9 -->
+<pre class="r"><code>diamonds_tidy %&gt;%
+  ggplot(aes(x = color, y = price)) +
+  geom_boxplot()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlhbW9uZHNfdGlkeSAlPiVcbiAgZ2dwbG90KGFlcyh4ID0gY2xhcml0eSwgeSA9IHByaWNlKSkgK1xuICBnZW9tX2JveHBsb3QoKVxuYGBgIn0= -->
+<pre class="r"><code>diamonds_tidy %&gt;%
+  ggplot(aes(x = clarity, y = price)) +
+  geom_boxplot()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="5" style="list-style-type: decimal">
+<li>Shortly we may try a regression fit using one or more of the categorical predictors cut, clarity and color, so let’s investigate these predictors:</li>
+</ol>
+<p>1.1. Investigate the factor levels of these predictors. How many dummy variables do you expect for each of them?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBWYWx1ZXNcbnVuaXF1ZShkaWFtb25kc190aWR5JGN1dClcbnVuaXF1ZShkaWFtb25kc190aWR5JGNsYXJpdHkpXG51bmlxdWUoZGlhbW9uZHNfdGlkeSRjb2xvcilcbmBgYCJ9 -->
+<pre class="r"><code># Values
+unique(diamonds_tidy$cut)
+unique(diamonds_tidy$clarity)
+unique(diamonds_tidy$color)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>there are diffrent distinct values for the cut, color and clarity column</p>
+<p>Use the dummy_cols() function in the fastDummies package to generate dummies for these predictors and check the number of dummies in each case.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShmYXN0RHVtbWllcylcbmRpYW1vbmRzX2R1bW1pZXMgPC0gZHVtbXlfY29scyhkaWFtb25kcywgc2VsZWN0X2NvbHVtbnMgPSBjKFwiY3V0XCIsIFwiY2xhcml0eVwiLCBcImNvbG9yXCIpLCByZW1vdmVfZmlyc3RfZHVtbXkgPSBUUlVFKVxuZ2xpbXBzZShkaWFtb25kc19kdW1taWVzKVxuYGBgIn0= -->
+<pre class="r"><code>library(fastDummies)
+diamonds_dummies &lt;- dummy_cols(diamonds, select_columns = c(&quot;cut&quot;, &quot;clarity&quot;, &quot;color&quot;), remove_first_dummy = TRUE)
+glimpse(diamonds_dummies)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="6" style="list-style-type: decimal">
+<li>Going forward we’ll let R handle dummy variable creation for categorical predictors in regression fitting (remember lm() will generate the correct numbers of dummy levels automatically, absorbing one of the levels into the intercept as a reference level)</li>
+</ol>
+<ol style="list-style-type: lower-roman">
+<li>First, we’ll start with simple linear regression. Regress price on carat and check the regression diagnostics</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWwgPC0gbG0oZm9ybXVsYSA9IHByaWNlIH4gY2FyYXQsIGRhdGEgPSBkaWFtb25kc190aWR5KVxucGxvdChtb2RlbClcbmBgYCJ9 -->
+<pre class="r"><code>model &lt;- lm(formula = price ~ carat, data = diamonds_tidy)
+plot(model)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbClcbmBgYCJ9 -->
+<pre class="r"><code>summary(model)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The residuals show systematic variation, significant deviation from normality and heteroscedasticity.</p>
+<p>The r2 value is 0.8439, and the residual standard error is 1549. To put the latter in context, let’s see the boxplot of volume.</p>
+<p>1.2 Run a regression with one or both of the predictor and response variables log() transformed and recheck the diagnostics. Do you see any improvement?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWwyX2xvZ3ggPC0gbG0ocHJpY2UgfiBsb2coY2FyYXQpLCBkYXRhID0gZGlhbW9uZHNfdGlkeSlcbnBsb3QobW9kZWwyX2xvZ3gpXG5gYGAifQ== -->
+<pre class="r"><code>model2_logx &lt;- lm(price ~ log(carat), data = diamonds_tidy)
+plot(model2_logx)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kMl9sb2d5IDwtIGxtKGxvZyhwcmljZSkgfiBjYXJhdCwgZGF0YSA9IGRpYW1vbmRzX3RpZHkpXG5wbG90KG1vZDJfbG9neSlcbmBgYCJ9 -->
+<pre class="r"><code>mod2_logy &lt;- lm(log(price) ~ carat, data = diamonds_tidy)
+plot(mod2_logy)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kMl9sb2d4bG9neSA8LSBsbShsb2cocHJpY2UpIH4gbG9nKGNhcmF0KSwgZGF0YSA9IGRpYW1vbmRzX3RpZHkpXG5wbG90KG1vZDJfbG9neGxvZ3kpXG5gYGAifQ== -->
+<pre class="r"><code>mod2_logxlogy &lt;- lm(log(price) ~ log(carat), data = diamonds_tidy)
+plot(mod2_logxlogy)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Log transformation of both variables is required to get close to satisfying the regression assumptions.</p>
+<p>1.3 Let’s use log() transformations of both predictor and response. Next, experiment with adding a single categorical predictor into the model. Which categorical predictor is best? [Hint - investigate r2 values]</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kM19jdXQgPC0gbG0obG9nKHByaWNlKSB+IGxvZyhjYXJhdCkgKyBjdXQsIGRhdGEgPSBkaWFtb25kc190aWR5KVxuc3VtbWFyeShtb2QzX2N1dClcbmBgYCJ9 -->
+<pre class="r"><code>mod3_cut &lt;- lm(log(price) ~ log(carat) + cut, data = diamonds_tidy)
+summary(mod3_cut)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kM19jb2xvciA8LSBsbShsb2cocHJpY2UpIH4gbG9nKGNhcmF0KSArIGNvbG9yLCBkYXRhID0gZGlhbW9uZHNfdGlkeSlcbnN1bW1hcnkobW9kM19jb2xvcilcbmBgYCJ9 -->
+<pre class="r"><code>mod3_color &lt;- lm(log(price) ~ log(carat) + color, data = diamonds_tidy)
+summary(mod3_color)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kM19jbGFyaXR5IDwtIGxtKGxvZyhwcmljZSkgfiBsb2coY2FyYXQpICsgY2xhcml0eSwgZGF0YSA9IGRpYW1vbmRzX3RpZHkpXG5zdW1tYXJ5KG1vZDNfY2xhcml0eSlcbmBgYCJ9 -->
+<pre class="r"><code>mod3_clarity &lt;- lm(log(price) ~ log(carat) + clarity, data = diamonds_tidy)
+summary(mod3_clarity)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>clarity leads to a model with highest r^2, all predictors are significant</p>
+<!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShHR2FsbHkpCmxpYnJhcnkoZ2dpcmFwaEV4dHJhKQpgYGAKCkxvYWQgdGhlIGRpYW1vbmRzLmNzdiBkYXRhIHNldCBhbmQgdW5kZXJ0YWtlIGFuIGluaXRpYWwgZXhwbG9yYXRpb24gb2YgdGhlIGRhdGEKCmBgYHtyfQpkaWFtb25kcyA8LSByZWFkX2NzdigiZGlhbW9uZHMuY3N2IikKYGBgCgpXZSBleHBlY3QgdGhlIGNhcmF0IG9mIHRoZSBkaWFtb25kcyB0byBiZSBzdHJvbmcgY29ycmVsYXRlZCB3aXRoIHRoZSBwaHlzaWNhbCBkaW1lbnNpb25zIHgsIHkgYW5kIHouIFVzZSBnZ3BhaXJzKCkgdG8gaW52ZXN0aWdhdGUgY29ycmVsYXRpb25zIGJldHdlZW4gdGhlc2UgZm91ciB2YXJpYWJsZXMuCgpgYGB7cn0KZ2dwYWlycyhkaWFtb25kc1ssYygiY2FyYXQiLCAieCIsICJ5IiwgInoiKV0pCmBgYAoKVGhlcmUgaXMgc2lnbmlmaWNhbnQgY29ycmVsYXRpb25zLiBMZXTigJlzIGRyb3AgY29sdW1ucyB4LCB5IGFuZCB6IGZyb20gdGhlIGRhdGFzZXQsIGluIHByZXBhcmF0aW9uIHRvIHVzZSBvbmx5IGNhcmF0IGdvaW5nIGZvcndhcmQuCgpgYGB7cn0KZGlhbW9uZHNfdGlkeSA8LSBkaWFtb25kcyAlPiUKICAgICAgICAgICAgc2VsZWN0KC14LCAteSwgLXopCmRpYW1vbmRzX3RpZHkKYGBgCgoKV2UgYXJlIGludGVyZXN0ZWQgaW4gZGV2ZWxvcGluZyBhIHJlZ3Jlc3Npb24gbW9kZWwgZm9yIHRoZSBwcmljZSBvZiBhIGRpYW1vbmQgaW4gdGVybXMgb2YgdGhlIHBvc3NpYmxlIHByZWRpY3RvciB2YXJpYWJsZXMgaW4gdGhlIGRhdGFzZXQuCgpVc2UgZ2dwYWlycygpIHRvIGludmVzdGlnYXRlIGNvcnJlbGF0aW9ucyBiZXR3ZWVuIHByaWNlIGFuZCB0aGUgcHJlZGljdG9ycyAKCmBgYHtyfQpnZ3BhaXJzKGRpYW1vbmRzX3RpZHkpCmBgYApjYXJhdCBpcyBzdHJvbmdseSBjb3JyZWxhdGVkIHdpdGggcHJpY2UuIEJveHBsb3RzIG9mIHByaWNlIHNwbGl0IGJ5IGN1dCwgY29sb3IgYW5kIHBhcnRpY3VsYXJseSBjbGFyaXR5IGFsc28gc2hvdyBzb21lIHZhcmlhdGlvbi4KCgpQZXJmb3JtIGZ1cnRoZXIgZ2dwbG90IHZpc3VhbGlzYXRpb25zIG9mIGFueSBzaWduaWZpY2FudCBjb3JyZWxhdGlvbnMgeW91IGZpbmQKCmBgYHtyfQpkaWFtb25kc190aWR5ICU+JQogIGdncGxvdChhZXMoeCA9IGNhcmF0LCB5ID0gcHJpY2UpKSArCiAgZ2VvbV9wb2ludCgpICsKICBnZW9tX3Ntb290aChtZXRob2QgPSAibG0iLCBzZSA9IEZBTFNFKQpgYGAKCmBgYHtyfQpkaWFtb25kc190aWR5ICU+JQogIGdncGxvdChhZXMoeCA9IGN1dCwgeSA9IHByaWNlKSkgKwogIGdlb21fYm94cGxvdCgpCmBgYAoKYGBge3J9CmRpYW1vbmRzX3RpZHkgJT4lCiAgZ2dwbG90KGFlcyh4ID0gY29sb3IsIHkgPSBwcmljZSkpICsKICBnZW9tX2JveHBsb3QoKQpgYGAKCgpgYGB7cn0KZGlhbW9uZHNfdGlkeSAlPiUKICBnZ3Bsb3QoYWVzKHggPSBjbGFyaXR5LCB5ID0gcHJpY2UpKSArCiAgZ2VvbV9ib3hwbG90KCkKYGBgCgoKCjUuIFNob3J0bHkgd2UgbWF5IHRyeSBhIHJlZ3Jlc3Npb24gZml0IHVzaW5nIG9uZSBvciBtb3JlIG9mIHRoZSBjYXRlZ29yaWNhbCBwcmVkaWN0b3JzIGN1dCwgY2xhcml0eSBhbmQgY29sb3IsIHNvIGxldOKAmXMgaW52ZXN0aWdhdGUgdGhlc2UgcHJlZGljdG9yczoKCjEuMS4gSW52ZXN0aWdhdGUgdGhlIGZhY3RvciBsZXZlbHMgb2YgdGhlc2UgcHJlZGljdG9ycy4gSG93IG1hbnkgZHVtbXkgdmFyaWFibGVzIGRvIHlvdSBleHBlY3QgZm9yIGVhY2ggb2YgdGhlbT8KCmBgYHtyfQojIFZhbHVlcwp1bmlxdWUoZGlhbW9uZHNfdGlkeSRjdXQpCnVuaXF1ZShkaWFtb25kc190aWR5JGNsYXJpdHkpCnVuaXF1ZShkaWFtb25kc190aWR5JGNvbG9yKQpgYGAKCnRoZXJlIGFyZSBkaWZmcmVudCBkaXN0aW5jdCB2YWx1ZXMgZm9yIHRoZSBjdXQsIGNvbG9yIGFuZCBjbGFyaXR5IGNvbHVtbgoKVXNlIHRoZSBkdW1teV9jb2xzKCkgZnVuY3Rpb24gaW4gdGhlIGZhc3REdW1taWVzIHBhY2thZ2UgdG8gZ2VuZXJhdGUgZHVtbWllcyBmb3IgdGhlc2UgcHJlZGljdG9ycyBhbmQgY2hlY2sgdGhlIG51bWJlciBvZiBkdW1taWVzIGluIGVhY2ggY2FzZS4KCmBgYHtyfQpsaWJyYXJ5KGZhc3REdW1taWVzKQpkaWFtb25kc19kdW1taWVzIDwtIGR1bW15X2NvbHMoZGlhbW9uZHMsIHNlbGVjdF9jb2x1bW5zID0gYygiY3V0IiwgImNsYXJpdHkiLCAiY29sb3IiKSwgcmVtb3ZlX2ZpcnN0X2R1bW15ID0gVFJVRSkKZ2xpbXBzZShkaWFtb25kc19kdW1taWVzKQpgYGAKCjYuIEdvaW5nIGZvcndhcmQgd2XigJlsbCBsZXQgUiBoYW5kbGUgZHVtbXkgdmFyaWFibGUgY3JlYXRpb24gZm9yIGNhdGVnb3JpY2FsIHByZWRpY3RvcnMgaW4gcmVncmVzc2lvbiBmaXR0aW5nIChyZW1lbWJlciBsbSgpIHdpbGwgZ2VuZXJhdGUgdGhlIGNvcnJlY3QgbnVtYmVycyBvZiBkdW1teSBsZXZlbHMgYXV0b21hdGljYWxseSwgYWJzb3JiaW5nIG9uZSBvZiB0aGUgbGV2ZWxzIGludG8gdGhlIGludGVyY2VwdCBhcyBhIHJlZmVyZW5jZSBsZXZlbCkKCmkpIEZpcnN0LCB3ZeKAmWxsIHN0YXJ0IHdpdGggc2ltcGxlIGxpbmVhciByZWdyZXNzaW9uLiBSZWdyZXNzIHByaWNlIG9uIGNhcmF0IGFuZCBjaGVjayB0aGUgcmVncmVzc2lvbiBkaWFnbm9zdGljcwoKYGBge3J9Cm1vZGVsIDwtIGxtKGZvcm11bGEgPSBwcmljZSB+IGNhcmF0LCBkYXRhID0gZGlhbW9uZHNfdGlkeSkKcGxvdChtb2RlbCkKYGBgCgpgYGB7cn0Kc3VtbWFyeShtb2RlbCkKYGBgCgpUaGUgcmVzaWR1YWxzIHNob3cgc3lzdGVtYXRpYyB2YXJpYXRpb24sIHNpZ25pZmljYW50IGRldmlhdGlvbiBmcm9tIG5vcm1hbGl0eSBhbmQgaGV0ZXJvc2NlZGFzdGljaXR5LgoKVGhlIHIyIHZhbHVlIGlzIDAuODQzOSwgYW5kIHRoZSByZXNpZHVhbCBzdGFuZGFyZCBlcnJvciBpcyAxNTQ5LiBUbyBwdXQgdGhlIGxhdHRlciBpbiBjb250ZXh0LCBsZXTigJlzIHNlZSB0aGUgYm94cGxvdCBvZiB2b2x1bWUuCgoKCjEuMiBSdW4gYSByZWdyZXNzaW9uIHdpdGggb25lIG9yIGJvdGggb2YgdGhlIHByZWRpY3RvciBhbmQgcmVzcG9uc2UgdmFyaWFibGVzIGxvZygpIHRyYW5zZm9ybWVkIGFuZCByZWNoZWNrIHRoZSBkaWFnbm9zdGljcy4gRG8geW91IHNlZSBhbnkgaW1wcm92ZW1lbnQ/CgpgYGB7cn0KbW9kZWwyX2xvZ3ggPC0gbG0ocHJpY2UgfiBsb2coY2FyYXQpLCBkYXRhID0gZGlhbW9uZHNfdGlkeSkKcGxvdChtb2RlbDJfbG9neCkKYGBgCgpgYGB7cn0KbW9kMl9sb2d5IDwtIGxtKGxvZyhwcmljZSkgfiBjYXJhdCwgZGF0YSA9IGRpYW1vbmRzX3RpZHkpCnBsb3QobW9kMl9sb2d5KQpgYGAKCmBgYHtyfQptb2QyX2xvZ3hsb2d5IDwtIGxtKGxvZyhwcmljZSkgfiBsb2coY2FyYXQpLCBkYXRhID0gZGlhbW9uZHNfdGlkeSkKcGxvdChtb2QyX2xvZ3hsb2d5KQpgYGAKCkxvZyB0cmFuc2Zvcm1hdGlvbiBvZiBib3RoIHZhcmlhYmxlcyBpcyByZXF1aXJlZCB0byBnZXQgY2xvc2UgdG8gc2F0aXNmeWluZyB0aGUgcmVncmVzc2lvbiBhc3N1bXB0aW9ucy4KCjEuMyBMZXTigJlzIHVzZSBsb2coKSB0cmFuc2Zvcm1hdGlvbnMgb2YgYm90aCBwcmVkaWN0b3IgYW5kIHJlc3BvbnNlLiBOZXh0LCBleHBlcmltZW50IHdpdGggYWRkaW5nIGEgc2luZ2xlIGNhdGVnb3JpY2FsIHByZWRpY3RvciBpbnRvIHRoZSBtb2RlbC4gV2hpY2ggY2F0ZWdvcmljYWwgcHJlZGljdG9yIGlzIGJlc3Q/IFtIaW50IC0gaW52ZXN0aWdhdGUgcjIgdmFsdWVzXQoKCmBgYHtyfQptb2QzX2N1dCA8LSBsbShsb2cocHJpY2UpIH4gbG9nKGNhcmF0KSArIGN1dCwgZGF0YSA9IGRpYW1vbmRzX3RpZHkpCnN1bW1hcnkobW9kM19jdXQpCmBgYAoKCmBgYHtyfQptb2QzX2NvbG9yIDwtIGxtKGxvZyhwcmljZSkgfiBsb2coY2FyYXQpICsgY29sb3IsIGRhdGEgPSBkaWFtb25kc190aWR5KQpzdW1tYXJ5KG1vZDNfY29sb3IpCmBgYAoKYGBge3J9Cm1vZDNfY2xhcml0eSA8LSBsbShsb2cocHJpY2UpIH4gbG9nKGNhcmF0KSArIGNsYXJpdHksIGRhdGEgPSBkaWFtb25kc190aWR5KQpzdW1tYXJ5KG1vZDNfY2xhcml0eSkKYGBgCgpjbGFyaXR5IGxlYWRzIHRvIGEgbW9kZWwgd2l0aCBoaWdoZXN0IHJeMiwgYWxsIHByZWRpY3RvcnMgYXJlIHNpZ25pZmljYW50CgoK</div>
 
 
 
