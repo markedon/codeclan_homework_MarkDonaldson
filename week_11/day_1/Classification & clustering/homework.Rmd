@@ -1,0 +1,39 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Classification & Clustering Methods 
+
+### Difference between Clustering and Classfication
+
+Clustering is an unsupervised machine learning approach which involves attempting to cluster similar data together without knowing its labels. Conversely, classification is a supervised machine learning approach that attempts to identify what class or category new data should fit in by learning from training data (which contains the class/category labels for all the data points).
+
+
+### Decision Trees
+
+A decision tree is a supervised machine learning algorithm where a target variable has been predefined and is often used for classification problems. It works for both categorical and continuous input and output variables and involves splitting the population/sample into 2 or more similar sets based on the most significant differentiator in the input variables. In simple terms, a decision tree is a series of sequential decisions made to reach a specific result based on a set of features present in the data.
+
+
+
+An example would be if a bank wanted know whether it should approve a small loan for a customer:
+
+A decision tree would firstly review whether a customer has good credit history. It would take credit history and create 2 classifications - customers with good credit history and customers with bad credit history. Then it would check the income of the customer and classify the customer into a further two groups - low and high - before finally checking the requested loan amount - big small. The algorithm then makes the decision whether the customer’s loan is approved. 
+
+The order in which a decision tree checks different features is determined by Gini Impurity Index - the measure how often a randomly chosen data point would be labeled incorrectly - or Information Gain - he decrease in the measure of disorder (entropy) after a dataset is split on a feature).
+
+Some of advantages of using a decision tree are: it is simple to comprehend, it is a fast way of determining the most significant variables in your dataset and relationships between variables, it does not matter what type of data a variable and its unaffected by outliers and NA values to a fair degree.
+
+Disadvantages include the chance of overfitting and it although it can work with continuous numerical variables, information can be lost when it classifies variables into different categories.
+
+ 
+### Random Forests 
+
+Random Forest is a machine learning algorithm that can be used for both regression and classification tasks and uses the power of multiple decision trees by combining their outputs. The name comes from the fact that the algorithm is made up of randomly created decision trees, whereby every node in each tree works on a random subset of attributes to calculate the output.
+
+Some of advantages of using random forests are: they are more accurate using unseen data than decision trees, you can identify the importance of variables and find complex patterns in dataset and it can handle thousands of input variables.
+
+Disadvantages include: does not give an accurate prediction when used for regression, it does not allow for data  beyond that seen in the training data and there is much less control on what the actually model does.
+
+
+Some of the sectors where random forests are used are in finance, the stock market and healthcare.
