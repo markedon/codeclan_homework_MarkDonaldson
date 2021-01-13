@@ -1,0 +1,128 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(dplyr)
+library(tidyverse)
+```
+
+```{r}
+library(tidyverse)
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+shuffle_index <- sample(1:nrow(titanic_set))
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+titanic_set <- titanic_set[shuffle_index, ]
+```
+
+```{r}
+titanic_clean <- titanic_set %>%
+  filter(survived %in% c(0,1)) %>%
+# Convert to factor level
+    mutate(sex = as.factor(sex), 
+           age_status = as.factor(if_else(age <= 16, "child", "adult")),
+         class = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")), 
+           survived_flag = factor(survived, levels = c(0,1), labels = c("Died", "Survived")), 
+           port_embarkation = as.factor(embarked)) %>%
+  select(sex, age_status, class, port_embarkation, sib_sp, parch, survived_flag) %>%
+  na.omit()
+```
+
+
+
+
+
+
+
+
+
+Q2
+```{r}
+titanic_clean %>%
+  select(survived_flag, sex) %>%
+  group_by(survived_flag,sex) %>%
+  summarise(total_count = n()) %>%
+ggplot() + 
+  aes(x = survived_flag, y = total_count, fill = sex) + 
+  geom_bar(stat = "identity", position = position_dodge()) + 
+  scale_fill_brewer(palette="Dark2") + 
+  ylab("total count") + xlab("survived")
+```
+```{r}
+titanic_clean %>%
+  select(survived_flag, class) %>%
+  group_by(survived_flag,class) %>%
+  summarise(total_count = n()) %>%
+ggplot() + 
+  aes(x = survived_flag, y = total_count, fill = class) + 
+  geom_bar(stat = "identity", position = position_dodge()) + 
+  scale_fill_brewer(palette="Dark2") + 
+  ylab("total count") + xlab("survived")
+```
+
+```{r}
+titanic_clean %>%
+  select(survived_flag, age_status) %>%
+  group_by(survived_flag,age_status) %>%
+  summarise(total_count = n()) %>%
+ggplot() + 
+  aes(x = survived_flag, y = total_count, fill = age_status) + 
+  geom_bar(stat = "identity", position = position_dodge()) + 
+  scale_fill_brewer(palette="Dark2") + 
+  ylab("total count") + xlab("survived")
+```
+
+```{r}
+titanic_clean %>%
+  select(survived_flag, port_embarkation) %>%
+  group_by(survived_flag, port_embarkation) %>%
+  summarise(total_count = n()) %>%
+ggplot() + 
+  aes(x = survived_flag, y = total_count, fill = port_embarkation) + 
+  geom_bar(stat = "identity", position = position_dodge()) + 
+  scale_fill_brewer(palette="Dark2") + 
+  ylab("total count") + xlab("survived")
+```
+
+
+
+
+```{r}
+summary(titanic_clean)
+```
+
+
+
+
+Q3
+```{r}
+n_data <- nrow(titanic_clean)
+test_index <- sample(1:n_data, size = n_data*0.2)
+titanic_test <- slice(titanic_clean, test_index)
+titanic_train <- slice(titanic_clean, -test_index)
+```
+
+```{r}
+titanic_test %>% 
+  janitor::tabyl(survived_flag)
+```
+
+```{r}
+titanic_train %>% 
+  janitor::tabyl(survived_flag)
+```
+
+```{r}
+titanic_fit <- rpart(survived_flag ~ .,
+                     data = titanic_train,
+                     method = "class")
+  
+rpart.plot(titanic_fit, yesno = 2)
+```
+```{r}
+rpart.rules(titanic_fit, cover = T)
+```
