@@ -1,0 +1,17 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+car_sales <- read_csv("data/car_dekho_details.csv")
+```
+
+```{r}
+model <- lm(formula = )
+```
+
