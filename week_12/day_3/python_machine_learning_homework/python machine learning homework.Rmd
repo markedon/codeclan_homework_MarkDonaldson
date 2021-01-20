@@ -5,6 +5,8 @@ output: html_notebook
 
 ```{r}
 library(tidyverse)
+library(janitor)
+library(modelr)
 ```
 
 ```{r}
@@ -12,6 +14,22 @@ car_sales <- read_csv("data/car_dekho_details.csv")
 ```
 
 ```{r}
-model <- lm(formula = )
+car_sales_tidy <-
+distinct(car_sales) %>% 
+  select(-"name")
+ 
+car_sales_tidy
+
 ```
+
+```{r}
+model <- lm(selling_price ~ year + km_driven + fuel + seller_type + transmission + owner, data = car_sales_tidy)
+summary(model)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(model)
+```
+
 
